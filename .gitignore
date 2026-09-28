@@ -1,0 +1,2 @@
+# Local test artifacts (Playwright screenshots/logs)
+.playwright-mcp/

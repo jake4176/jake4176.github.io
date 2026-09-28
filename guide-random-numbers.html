@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>컴퓨터는 어떻게 무작위 번호를 뽑을까? 난수와 셔플 알고리즘 | 럭키랩</title>
+  <meta name="description" content="의사난수 생성기와 시드의 개념, 공정한 추첨을 위한 피셔-예이츠 셔플, 흔히 저지르는 셔플 실수와 럭키랩 추첨기의 동작 방식을 설명합니다." />
+  <link rel="canonical" href="https://jake4176.github.io/guide-random-numbers.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="럭키랩" />
+  <meta property="og:title" content="컴퓨터는 어떻게 무작위 번호를 뽑을까? 난수와 셔플 알고리즘" />
+  <meta property="og:description" content="의사난수 생성기와 시드의 개념, 공정한 추첨을 위한 피셔-예이츠 셔플, 흔히 저지르는 셔플 실수와 럭키랩 추첨기의 동작 방식을 설명합니다." />
+  <meta property="og:url" content="https://jake4176.github.io/guide-random-numbers.html" />
+  <meta property="og:locale" content="ko_KR" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%80%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+  <script>
+    (function () {
+      var theme = 'dark';
+      try {
+        theme = localStorage.getItem('lotto_theme') ||
+          (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      } catch (e) {}
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+  <link rel="stylesheet" href="/assets/site.css" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "컴퓨터는 어떻게 무작위 번호를 뽑을까? 난수와 셔플 알고리즘", "description": "의사난수 생성기와 시드의 개념, 공정한 추첨을 위한 피셔-예이츠 셔플, 흔히 저지르는 셔플 실수와 럭키랩 추첨기의 동작 방식을 설명합니다.", "datePublished": "2026-09-29", "dateModified": "2026-09-29", "inLanguage": "ko", "author": {"@type": "Organization", "name": "럭키랩", "url": "https://jake4176.github.io/about.html"}, "publisher": {"@type": "Organization", "name": "럭키랩", "url": "https://jake4176.github.io/"}, "mainEntityOfPage": "https://jake4176.github.io/guide-random-numbers.html"}</script>
+<!-- HEAD_EXTRA -->
+</head>
+<body class="site">
+  <a class="skip-link" href="#main">본문으로 바로가기</a>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="site-logo" href="/"><span class="site-logo-mark" aria-hidden="true">🍀</span>럭키랩</a>
+      <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-controls="siteNav" aria-expanded="false" aria-label="메뉴 열기"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+      <nav class="site-nav" id="siteNav" aria-label="주요 메뉴">
+        <ul>
+        <li><a href="/">홈</a></li>
+        <li><a href="/lotto.html">로또 번호 추첨기</a></li>
+        <li><a href="/animal-test.html">동물상 테스트</a></li>
+        <li><a href="/guides.html" aria-current="page">가이드</a></li>
+        <li><a href="/about.html">소개</a></li>
+        </ul>
+      </nav>
+      <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="라이트 모드로 전환" title="라이트 모드로 전환"><svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg><svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></button>
+    </div>
+  </header>
+  <main id="main">
+    <article class="page">
+      <nav class="breadcrumb" aria-label="현재 위치"><a href="/">홈</a><span aria-hidden="true">›</span><a href="/guides.html">가이드</a><span aria-hidden="true">›</span>난수와 셔플 알고리즘</nav>
+      <h1 class="page-title">컴퓨터는 어떻게 무작위 번호를 뽑을까? 난수와 셔플 알고리즘</h1>
+      <p class="page-lead">컴퓨터는 정해진 명령만 실행하는 기계인데, 어떻게 "무작위"로 번호를 뽑을 수 있을까요? 번호 추첨기 같은 프로그램이 공정하려면 무엇을 지켜야 하는지, 많은 개발자가 저지르는 실수는 무엇인지, 럭키랩 추첨기는 실제로 어떻게 동작하는지 설명합니다.</p>
+      <div class="meta-line"><span>럭키랩 가이드</span><span>작성·검토 2026년 9월 29일</span><span>읽는 시간 약 8분</span></div>
+
+      <div class="content-card prose">
+        <nav class="toc" aria-label="목차">
+          <strong>목차</strong>
+          <ol>
+            <li><a href="#prng">컴퓨터의 "무작위"는 사실 계산 결과다</a></li>
+            <li><a href="#seed">시드: 같은 출발점이면 같은 결과</a></li>
+            <li><a href="#fair">공정한 추첨의 조건</a></li>
+            <li><a href="#fisher">피셔-예이츠 셔플</a></li>
+            <li><a href="#mistakes">자주 하는 실수 세 가지</a></li>
+            <li><a href="#luckylab">럭키랩 추첨기는 이렇게 동작합니다</a></li>
+            <li><a href="#real">실제 로또 추첨은 어떻게 할까</a></li>
+          </ol>
+        </nav>
+
+        <h2 id="prng">1. 컴퓨터의 "무작위"는 사실 계산 결과다</h2>
+        <p>주사위를 던지면 결과를 미리 알 수 없습니다. 반면 컴퓨터는 같은 입력에 항상 같은 출력을 내도록 만들어진 기계입니다. 그래서 대부분의 프로그램은 진짜 무작위 대신 <strong>의사난수(pseudo-random number)</strong>를 씁니다. 의사난수 생성기(PRNG)는 복잡한 수식을 반복 계산해서, 사람이 보기에는 규칙이 없는 것처럼 보이는 숫자열을 만들어 냅니다.</p>
+        <p>웹 브라우저에서 흔히 쓰는 <code>Math.random()</code>도 의사난수 생성기입니다. 크롬, 엣지 등이 쓰는 V8 자바스크립트 엔진은 xorshift128+라는 알고리즘을 사용합니다. 이 알고리즘은 128비트 크기의 내부 상태를 비트 이동(shift)과 배타적 논리합(XOR)으로 섞어 다음 숫자를 만들고, 그 결과를 0 이상 1 미만의 소수로 바꿔 돌려줍니다. 계산이 매우 빠르고, 번호 추첨이나 게임처럼 결과를 맞히려는 사람이 없는 용도에는 충분히 고르게 분포합니다.</p>
+        <p>다만 의사난수는 내부 상태를 알면 다음 값을 계산할 수 있습니다. 그래서 비밀번호, 인증 토큰, 암호화 키처럼 누군가 예측하면 안 되는 값에는 <code>crypto.getRandomValues()</code> 같은 <strong>암호학적으로 안전한 난수 생성기</strong>를 써야 합니다. 이런 생성기는 운영체제가 모은 하드웨어 잡음 같은 예측하기 어려운 값을 섞어 씁니다.</p>
+
+        <h2 id="seed">2. 시드: 같은 출발점이면 같은 결과</h2>
+        <p>의사난수 생성기는 <strong>시드(seed)</strong>라는 초기값에서 출발합니다. 시드가 같으면 만들어지는 숫자열도 처음부터 끝까지 똑같습니다. 이 성질은 불편해 보이지만 쓸모가 많습니다. 게임에서 같은 맵을 다시 만들거나, 과학 실험에서 같은 시뮬레이션을 재현할 때 일부러 시드를 고정합니다.</p>
+        <p>브라우저의 <code>Math.random()</code>은 시드를 직접 정할 수 없고, 브라우저가 시작될 때 예측하기 어려운 값으로 자동 설정합니다. 그래서 페이지를 열 때마다 다른 결과가 나옵니다.</p>
+
+        <h2 id="fair">3. 공정한 추첨의 조건</h2>
+        <p>"무작위로 6개를 뽑는다"는 말에는 생각보다 엄격한 조건이 담겨 있습니다. 로또 번호 추첨이 공정하다고 하려면 다음이 모두 성립해야 합니다.</p>
+        <ul>
+          <li><strong>균등성</strong>: 1부터 45까지 모든 번호가 뽑힐 확률이 같아야 합니다.</li>
+          <li><strong>조합의 균등성</strong>: 개별 번호뿐 아니라 8,145,060가지 조합 하나하나가 모두 같은 확률로 나와야 합니다.</li>
+          <li><strong>중복 없음</strong>: 한 번 뽑힌 번호는 같은 게임에서 다시 나오면 안 됩니다.</li>
+          <li><strong>독립성</strong>: 이번 결과가 다음 결과에 영향을 주면 안 됩니다.</li>
+        </ul>
+        <p>두 번째 조건이 특히 중요합니다. 개별 번호의 확률이 같아 보여도, 특정 번호끼리 함께 나오는 경향이 있으면 공정하지 않습니다. 이 조건을 간단하고 확실하게 만족시키는 방법이 바로 셔플입니다.</p>
+
+        <h2 id="fisher">4. 피셔-예이츠 셔플</h2>
+        <p>카드를 잘 섞은 뒤 위에서 6장을 뽑으면 공정한 추첨이 됩니다. 컴퓨터에서 "잘 섞는" 표준 방법이 <strong>피셔-예이츠 셔플(Fisher–Yates shuffle)</strong>입니다. 원리는 다음과 같습니다.</p>
+        <ol>
+          <li>1부터 45까지 숫자를 배열에 넣습니다.</li>
+          <li>배열의 맨 마지막 칸부터 시작해, 그 칸과 <strong>자기 자신을 포함한 앞쪽 칸 중 하나</strong>를 무작위로 골라 서로 바꿉니다.</li>
+          <li>한 칸 앞으로 이동해 같은 일을 반복하고, 맨 앞까지 오면 끝냅니다.</li>
+        </ol>
+        <pre><code>for (let i = arr.length - 1; i &gt; 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1)); // 0 ~ i 중 하나
+  [arr[i], arr[j]] = [arr[j], arr[i]];           // 두 칸 맞바꾸기
+}</code></pre>
+        <p>이 방법은 45개 숫자를 늘어놓는 45! 가지 순서가 모두 정확히 같은 확률로 나오도록 보장합니다. 마지막 칸에는 45개 숫자가 각각 1/45 확률로, 그 앞 칸에는 남은 44개가 각각 1/44 확률로 들어가는 식이라 어떤 순서든 확률이 1/45 × 1/44 × … × 1 = 1/45!로 같기 때문입니다. 섞인 배열에서 앞의 6개(또는 뒤의 6개)를 가져오면 모든 조합이 같은 확률로 나오는 공정한 추첨이 됩니다. 계산도 숫자 개수만큼만 반복하면 되므로 매우 빠릅니다.</p>
+
+        <h2 id="mistakes">5. 자주 하는 실수 세 가지</h2>
+        <h3>실수 1. 정렬 함수에 무작위 비교를 넣기</h3>
+        <pre><code>arr.sort(() =&gt; Math.random() - 0.5); // ❌ 편향이 생김</code></pre>
+        <p>짧고 편해 보여서 인터넷에서 자주 보이는 코드지만, 공정한 셔플이 아닙니다. 정렬 알고리즘은 "비교 결과가 일관된다"고 가정하고 만들어졌는데, 매번 무작위 답을 주면 알고리즘에 따라 특정 위치에 특정 원소가 더 자주 남는 편향이 생깁니다. 브라우저마다 정렬 방식이 달라 편향의 모양도 달라집니다.</p>
+        <h3>실수 2. 범위를 잘못 잡은 셔플</h3>
+        <p>피셔-예이츠에서 <code>j</code>를 <code>0 ~ i</code>가 아니라 배열 전체(<code>0 ~ length-1</code>)에서 고르는 실수도 흔합니다. 겉보기에는 더 잘 섞일 것 같지만, 가능한 경우의 수(nⁿ)가 순서의 수(n!)로 나누어떨어지지 않아 일부 순서가 더 자주 나옵니다.</p>
+        <h3>실수 3. 뽑고 나서 중복을 다시 뽑기</h3>
+        <p>1~45 중 하나를 뽑고, 이미 뽑은 번호면 다시 뽑는 방식도 결과 자체는 공정합니다. 하지만 번호를 거의 다 뽑아 갈수록 재시도가 늘어나 비효율적이고, 조건을 추가하다 보면 실수하기 쉽습니다. 셔플 방식이 더 단순하고 안전합니다.</p>
+
+        <h2 id="luckylab">6. 럭키랩 추첨기는 이렇게 동작합니다</h2>
+        <p><a href="/lotto.html">럭키랩 로또 번호 추첨기</a>는 위에서 설명한 피셔-예이츠 셔플을 그대로 사용합니다. 한 게임을 뽑는 순서는 다음과 같습니다.</p>
+        <ol>
+          <li>1부터 45까지의 번호 중 <strong>제외 번호</strong>로 지정한 것을 뺍니다.</li>
+          <li><strong>포함 번호</strong>로 지정한 번호(최대 5개)를 먼저 결과에 넣고, 남은 후보에서 뺍니다.</li>
+          <li>남은 후보 번호들을 피셔-예이츠 방식으로 섞습니다.</li>
+          <li>섞인 후보에서 6개가 될 때까지 번호를 꺼내고, 보너스 번호가 켜져 있으면 한 개를 더 꺼냅니다.</li>
+          <li>본 번호 6개를 작은 수부터 정렬해 보여 줍니다.</li>
+        </ol>
+        <p>세트마다 이 과정을 새로 반복하므로 A~E 세트는 서로 독립적입니다. 포함·제외 필터는 <strong>추첨기가 고를 수 있는 범위</strong>를 바꿀 뿐, 실제 로또 추첨에서 그 번호들이 나올 확률에는 영향을 주지 않는다는 점도 기억해 주세요. 모든 계산은 여러분의 브라우저 안에서 이루어지며, 뽑은 번호는 서버로 전송되지 않고 최근 기록만 브라우저에 저장됩니다.</p>
+
+        <h2 id="real">7. 실제 로또 추첨은 어떻게 할까</h2>
+        <p>실제 로또 6/45 추첨은 컴퓨터 난수가 아니라 방송으로 공개되는 추첨기에서 번호가 적힌 공을 뽑는 물리적인 방식으로 진행됩니다. 추첨기 안에서 충분히 섞인 공을 하나씩 뽑아내는 방식이라, 사람이 결과를 조작하거나 예측하기 어렵고 누구나 과정을 지켜볼 수 있다는 장점이 있습니다.</p>
+        <p>물리적인 추첨이든 잘 만든 컴퓨터 셔플이든 핵심은 같습니다. 모든 조합이 같은 확률로 나오도록 하고, 이전 결과가 다음 결과에 영향을 주지 않게 하는 것입니다. 그래서 과거 당첨 번호를 아무리 분석해도 다음 번호를 맞힐 수 없습니다. 이 이야기는 <a href="/guide-lotto-myths.html">로또 번호에 대한 흔한 오해 7가지</a>에서 이어집니다.</p>
+      </div>
+
+      <section class="related" aria-labelledby="related-title">
+        <h2 class="section-heading" id="related-title">함께 읽으면 좋은 글</h2>
+        <div class="card-grid">
+          <a class="link-card" href="/guide-lotto-probability.html"><span class="card-kicker">로또와 확률</span><h3>로또 6/45 당첨 확률, 숫자로 정확하게 이해하기</h3><p>8,145,060가지 조합이 나오는 계산 과정과 등수별 확률.</p><span class="card-more">읽어 보기 →</span></a>
+          <a class="link-card" href="/guide-lotto-myths.html"><span class="card-kicker">로또와 확률</span><h3>로또 번호에 대한 흔한 오해 7가지</h3><p>도박사의 오류부터 명당 이야기까지 확률로 검증합니다.</p><span class="card-more">읽어 보기 →</span></a>
+          <a class="link-card" href="/lotto.html"><span class="card-kicker">도구</span><h3>로또 번호 추첨기</h3><p>피셔-예이츠 셔플로 공정하게 번호를 뽑아 보세요.</p><span class="card-more">사용해 보기 →</span></a>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-about">
+        <a class="site-logo" href="/"><span class="site-logo-mark" aria-hidden="true">🍀</span>럭키랩</a>
+        <p>확률과 AI를 재미있게 체험하는 무료 도구와, 그 원리를 쉽게 풀어 쓴 가이드를 만듭니다. 모든 도구는 회원가입 없이 브라우저에서 바로 동작합니다.</p>
+      </div>
+      <div>
+        <h2>도구와 가이드</h2>
+        <ul>
+          <li><a href="/lotto.html">로또 번호 추첨기</a></li>
+          <li><a href="/animal-test.html">AI 동물상 테스트</a></li>
+          <li><a href="/guides.html">가이드 전체 보기</a></li>
+          <li><a href="/guide-lotto-probability.html">로또 당첨 확률 정리</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>사이트 정보</h2>
+        <ul>
+          <li><a href="/about.html">럭키랩 소개</a></li>
+          <li><a href="/privacy.html">개인정보처리방침</a></li>
+          <li><a href="/terms.html">이용약관</a></li>
+          <li><a href="/contact.html">문의하기</a></li>
+        </ul>
+      </div>
+      <p class="footer-bottom">© 2026 럭키랩. 로또 번호 추첨기와 동물상 테스트는 재미를 위한 도구이며 당첨이나 결과를 보장하지 않습니다.</p>
+    </div>
+  </footer>
+  <script src="/assets/site.js" defer></script>
+</body>
+</html>

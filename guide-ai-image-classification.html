@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI는 사진 속 강아지와 고양이를 어떻게 구분할까? | 럭키랩</title>
+  <meta name="description" content="이미지가 숫자로 바뀌는 과정, 합성곱 신경망과 전이학습, Teachable Machine과 TensorFlow.js로 브라우저에서 동작하는 AI의 원리와 한계를 설명합니다." />
+  <link rel="canonical" href="https://jake4176.github.io/guide-ai-image-classification.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="럭키랩" />
+  <meta property="og:title" content="AI는 사진 속 강아지와 고양이를 어떻게 구분할까?" />
+  <meta property="og:description" content="이미지가 숫자로 바뀌는 과정, 합성곱 신경망과 전이학습, Teachable Machine과 TensorFlow.js로 브라우저에서 동작하는 AI의 원리와 한계를 설명합니다." />
+  <meta property="og:url" content="https://jake4176.github.io/guide-ai-image-classification.html" />
+  <meta property="og:locale" content="ko_KR" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%80%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+  <script>
+    (function () {
+      var theme = 'dark';
+      try {
+        theme = localStorage.getItem('lotto_theme') ||
+          (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      } catch (e) {}
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+  <link rel="stylesheet" href="/assets/site.css" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "AI는 사진 속 강아지와 고양이를 어떻게 구분할까?", "description": "이미지가 숫자로 바뀌는 과정, 합성곱 신경망과 전이학습, Teachable Machine과 TensorFlow.js로 브라우저에서 동작하는 AI의 원리와 한계를 설명합니다.", "datePublished": "2026-09-29", "dateModified": "2026-09-29", "inLanguage": "ko", "author": {"@type": "Organization", "name": "럭키랩", "url": "https://jake4176.github.io/about.html"}, "publisher": {"@type": "Organization", "name": "럭키랩", "url": "https://jake4176.github.io/"}, "mainEntityOfPage": "https://jake4176.github.io/guide-ai-image-classification.html"}</script>
+<!-- HEAD_EXTRA -->
+</head>
+<body class="site">
+  <a class="skip-link" href="#main">본문으로 바로가기</a>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="site-logo" href="/"><span class="site-logo-mark" aria-hidden="true">🍀</span>럭키랩</a>
+      <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-controls="siteNav" aria-expanded="false" aria-label="메뉴 열기"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+      <nav class="site-nav" id="siteNav" aria-label="주요 메뉴">
+        <ul>
+        <li><a href="/">홈</a></li>
+        <li><a href="/lotto.html">로또 번호 추첨기</a></li>
+        <li><a href="/animal-test.html">동물상 테스트</a></li>
+        <li><a href="/guides.html" aria-current="page">가이드</a></li>
+        <li><a href="/about.html">소개</a></li>
+        </ul>
+      </nav>
+      <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="라이트 모드로 전환" title="라이트 모드로 전환"><svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg><svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></button>
+    </div>
+  </header>
+  <main id="main">
+    <article class="page">
+      <nav class="breadcrumb" aria-label="현재 위치"><a href="/">홈</a><span aria-hidden="true">›</span><a href="/guides.html">가이드</a><span aria-hidden="true">›</span>AI 이미지 분류의 원리</nav>
+      <h1 class="page-title">AI는 사진 속 강아지와 고양이를 어떻게 구분할까?</h1>
+      <p class="page-lead">사람은 강아지와 고양이를 한눈에 구분하지만, 컴퓨터에게 사진은 그저 숫자 덩어리입니다. 이 숫자에서 "강아지다움"과 "고양이다움"을 찾아내는 이미지 분류 AI의 원리를, 럭키랩 동물상 테스트에 쓰인 모델을 예로 들어 수식 없이 설명합니다.</p>
+      <div class="meta-line"><span>럭키랩 가이드</span><span>작성·검토 2026년 9월 29일</span><span>읽는 시간 약 9분</span></div>
+
+      <div class="content-card prose">
+        <nav class="toc" aria-label="목차">
+          <strong>목차</strong>
+          <ol>
+            <li><a href="#pixels">컴퓨터에게 사진은 숫자 표다</a></li>
+            <li><a href="#rules">규칙을 직접 짜는 방식은 왜 실패할까</a></li>
+            <li><a href="#cnn">합성곱 신경망: 작은 특징에서 큰 특징으로</a></li>
+            <li><a href="#transfer">전이학습: 이미 배운 눈을 빌려 쓰기</a></li>
+            <li><a href="#probability">결과는 "확률"로 나온다</a></li>
+            <li><a href="#browser">사진을 서버로 보내지 않는 AI</a></li>
+            <li><a href="#limits">AI 분류의 한계와 동물상 테스트</a></li>
+            <li><a href="#diy">직접 만들어 보기</a></li>
+          </ol>
+        </nav>
+
+        <h2 id="pixels">1. 컴퓨터에게 사진은 숫자 표다</h2>
+        <p>디지털 사진은 아주 작은 점, 즉 <strong>픽셀</strong>이 모여 만들어집니다. 각 픽셀의 색은 빨강(R), 초록(G), 파랑(B) 세 가지 빛의 세기로 표현되고, 각각 0부터 255까지의 숫자로 저장됩니다. 가로세로 224픽셀짜리 작은 사진이라도 224 × 224 × 3 = <strong>150,528개의 숫자</strong>로 이루어져 있습니다.</p>
+        <p>럭키랩 동물상 테스트의 AI 모델도 사진을 받으면 먼저 가운데를 정사각형으로 잘라 224 × 224 크기로 줄인 뒤, 이 15만 개 남짓한 숫자를 입력으로 사용합니다. AI가 하는 일은 이 숫자 표를 보고 "강아지일 가능성"과 "고양이일 가능성"이라는 두 숫자를 계산하는 것입니다.</p>
+
+        <h2 id="rules">2. 규칙을 직접 짜는 방식은 왜 실패할까</h2>
+        <p>"귀가 뾰족하면 고양이", "코가 길면 강아지" 같은 규칙을 사람이 직접 프로그램으로 짜면 어떨까요? 실제로 해 보면 금방 막힙니다. 귀가 접힌 고양이(스코티시 폴드)도 있고, 코가 짧은 강아지(퍼그)도 있습니다. 게다가 컴퓨터는 "귀"가 무엇인지부터 모릅니다. 같은 귀라도 조명, 각도, 털 색깔에 따라 픽셀 숫자가 완전히 달라지기 때문입니다.</p>
+        <p>그래서 현대 이미지 AI는 규칙을 사람이 쓰지 않고, <strong>수많은 예시 사진에서 스스로 규칙을 찾도록</strong> 만듭니다. 이것이 머신러닝, 그중에서도 딥러닝의 핵심 아이디어입니다.</p>
+
+        <h2 id="cnn">3. 합성곱 신경망: 작은 특징에서 큰 특징으로</h2>
+        <p>이미지 분류에 가장 널리 쓰이는 구조는 <strong>합성곱 신경망(CNN, Convolutional Neural Network)</strong>입니다. CNN은 작은 돋보기(필터)를 사진 위로 조금씩 옮겨 가며 특정한 무늬가 있는지 검사합니다. 이 검사를 여러 층에 걸쳐 반복합니다.</p>
+        <ul>
+          <li><strong>앞쪽 층</strong>: 가로선, 세로선, 색이 바뀌는 경계처럼 아주 단순한 무늬를 찾습니다.</li>
+          <li><strong>중간 층</strong>: 앞 층의 결과를 조합해 털의 질감, 둥근 곡선, 눈동자 같은 모양을 찾습니다.</li>
+          <li><strong>뒤쪽 층</strong>: 더 큰 조합으로 "뾰족한 귀", "긴 주둥이", "수염" 같은 부분을 알아봅니다.</li>
+          <li><strong>마지막 층</strong>: 찾아낸 특징들을 종합해 각 분류(강아지, 고양이)에 점수를 매깁니다.</li>
+        </ul>
+        <p>놀라운 점은 이 필터들을 사람이 설계하지 않는다는 것입니다. 처음에는 무작위 값으로 시작해서, 정답이 붙은 사진을 보며 틀릴 때마다 필터 값을 조금씩 고치는 <strong>학습</strong> 과정을 거칩니다. 수많은 사진으로 이 과정을 반복하면 필터가 자연스럽게 쓸모 있는 무늬를 찾도록 바뀝니다.</p>
+
+        <h2 id="transfer">4. 전이학습: 이미 배운 눈을 빌려 쓰기</h2>
+        <p>CNN을 처음부터 학습시키려면 수십만 장 이상의 사진과 강력한 컴퓨터가 필요합니다. 그런데 Teachable Machine 같은 도구로는 사진 수십~수백 장만으로도 꽤 정확한 모델을 몇 분 만에 만들 수 있습니다. 비결은 <strong>전이학습(transfer learning)</strong>입니다.</p>
+        <p>전이학습은 이미 방대한 사진으로 학습된 모델의 "눈"을 빌려 오는 방법입니다. Teachable Machine은 약 1,000가지 사물로 분류된 100만 장 이상의 사진(ImageNet)으로 미리 학습된 <strong>MobileNet</strong> 계열 모델을 바탕으로 합니다. 이 모델은 선, 질감, 모양 같은 일반적인 시각 특징을 이미 잘 알고 있습니다. 사용자가 올린 사진으로는 마지막 판단 부분만 새로 학습시키면 되므로, 적은 사진으로도 빠르게 학습이 끝납니다.</p>
+        <p>사람에 비유하면, 이미 세상의 많은 것을 본 사람에게 "이건 강아지, 이건 고양이"라고 몇 장만 보여 주면 금방 구분하는 것과 비슷합니다. 아무것도 본 적 없는 사람을 처음부터 가르치는 것보다 훨씬 효율적입니다.</p>
+
+        <h2 id="probability">5. 결과는 "확률"로 나온다</h2>
+        <p>분류 모델의 마지막 단계는 각 분류의 점수를 <strong>합이 1(100%)이 되는 확률</strong>로 바꿉니다. 이 변환을 소프트맥스(softmax)라고 합니다. 그래서 동물상 테스트 결과는 "강아지상 72%, 고양이상 28%"처럼 항상 두 숫자를 더하면 100%가 됩니다.</p>
+        <p>이 확률은 "이 사진이 학습에 쓰인 강아지 사진들과 고양이 사진들 중 어느 쪽에 더 가까워 보이는가"를 나타냅니다. 참고로 럭키랩이 강아지와 고양이 사진 4장으로 이 모델을 시험해 보았을 때, 네 장 모두 정답 쪽 확률이 97% 이상으로 나왔습니다. 동물 사진에서는 꽤 확신 있게 구분한다는 뜻입니다.</p>
+
+        <h2 id="browser">6. 사진을 서버로 보내지 않는 AI</h2>
+        <p>많은 AI 서비스는 사진을 회사 서버로 보내 분석한 뒤 결과만 돌려줍니다. 반면 럭키랩 동물상 테스트는 <strong>TensorFlow.js</strong>라는 도구를 써서 AI 모델 자체를 여러분의 브라우저로 내려받아 실행합니다.</p>
+        <ul>
+          <li>처음 페이지를 열 때 약 2MB 크기의 모델 파일을 내려받습니다.</li>
+          <li>사진 분석은 여러분의 휴대폰이나 컴퓨터 안에서 이루어집니다.</li>
+          <li>올린 사진과 웹캠 화면은 어떤 서버로도 전송되거나 저장되지 않습니다.</li>
+        </ul>
+        <p>이 방식은 개인정보 보호에 유리하고, 서버를 거치지 않아 결과도 빨리 나옵니다. 대신 기기 성능에 따라 모델을 불러오는 데 몇 초가 걸릴 수 있습니다.</p>
+
+        <h2 id="limits">7. AI 분류의 한계와 동물상 테스트</h2>
+        <p>AI 모델은 <strong>학습한 범위 안에서만</strong> 믿을 만합니다. 몇 가지 한계를 알아 두면 결과를 더 현명하게 받아들일 수 있습니다.</p>
+        <ul>
+          <li><strong>학습하지 않은 것도 억지로 분류합니다.</strong> 강아지와 고양이만 배운 모델에 자동차 사진을 넣어도 "강아지 60%, 고양이 40%"처럼 둘 중 하나로 답합니다. "모르겠다"는 선택지가 없기 때문입니다.</li>
+          <li><strong>사람 얼굴은 학습 범위 밖입니다.</strong> 동물상 테스트의 모델은 동물 사진으로 학습했습니다. 사람 얼굴을 넣으면 얼굴형, 눈매, 머리카락의 질감과 색, 배경 같은 요소가 학습한 강아지 사진들과 고양이 사진들 중 어느 쪽과 더 비슷한지를 계산합니다. 그래서 결과는 재미로 즐기기에 좋지만, 과학적인 성격이나 인상 판정으로 받아들이면 안 됩니다.</li>
+          <li><strong>작은 변화에도 결과가 바뀔 수 있습니다.</strong> 조명, 각도, 표정, 배경이 달라지면 같은 사람도 다른 결과가 나올 수 있습니다. 안정적인 결과를 얻는 방법은 <a href="/guide-photo-tips.html">사진 촬영 팁</a>에 정리했습니다.</li>
+          <li><strong>학습 데이터의 치우침이 결과에 반영됩니다.</strong> 예를 들어 학습한 고양이 사진에 주황색 고양이가 많았다면, 주황색 계열이 강한 사진을 고양이 쪽으로 판단하는 경향이 생길 수 있습니다.</li>
+        </ul>
+
+        <h2 id="diy">8. 직접 만들어 보기</h2>
+        <p>Google의 <strong>Teachable Machine</strong>을 이용하면 코딩을 몰라도 나만의 이미지 분류 모델을 만들 수 있습니다.</p>
+        <ol>
+          <li>Teachable Machine 사이트에서 "이미지 프로젝트"를 새로 만듭니다.</li>
+          <li>분류(클래스)마다 이름을 붙이고, 웹캠으로 찍거나 사진 파일을 올려 예시를 모읍니다. 클래스마다 수십 장 이상, 다양한 각도와 배경의 사진을 모으면 좋습니다.</li>
+          <li>"모델 학습시키기"를 누르면 전이학습이 진행됩니다. 보통 1~2분이면 끝납니다.</li>
+          <li>미리보기 창에서 새 사진으로 결과를 확인하고, 틀리는 경우가 있으면 그런 사진을 더 추가해 다시 학습합니다.</li>
+          <li>"모델 내보내기"에서 TensorFlow.js 형식으로 업로드하면 웹사이트에서 불러 쓸 수 있는 링크가 만들어집니다.</li>
+        </ol>
+        <p>한 가지 팁은 클래스 이름을 "Class 1" 그대로 두지 말고 "강아지", "고양이"처럼 의미 있게 바꾸는 것입니다. 나중에 웹사이트에서 결과를 표시할 때 어느 쪽이 무엇인지 헷갈리지 않습니다.</p>
+        <div class="btn-row">
+          <a class="btn-link" href="/animal-test.html">🐶 동물상 테스트 해 보기</a>
+          <a class="btn-link secondary" href="/guide-dog-cat-face.html">강아지상·고양이상 특징 보기</a>
+        </div>
+      </div>
+
+      <section class="related" aria-labelledby="related-title">
+        <h2 class="section-heading" id="related-title">함께 읽으면 좋은 글</h2>
+        <div class="card-grid">
+          <a class="link-card" href="/guide-photo-tips.html"><span class="card-kicker">AI와 동물상</span><h3>동물상 테스트 정확도를 높이는 사진 촬영 팁</h3><p>AI가 사진을 처리하는 방식에 맞춘 촬영 요령을 알려 드립니다.</p><span class="card-more">읽어 보기 →</span></a>
+          <a class="link-card" href="/guide-dog-cat-face.html"><span class="card-kicker">AI와 동물상</span><h3>강아지상 vs 고양이상, 얼굴 인상의 특징 정리</h3><p>눈매, 얼굴선, 표정으로 보는 두 인상의 차이.</p><span class="card-more">읽어 보기 →</span></a>
+          <a class="link-card" href="/guide-random-numbers.html"><span class="card-kicker">로또와 확률</span><h3>컴퓨터는 어떻게 무작위 번호를 뽑을까?</h3><p>의사난수와 셔플 알고리즘의 원리.</p><span class="card-more">읽어 보기 →</span></a>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-about">
+        <a class="site-logo" href="/"><span class="site-logo-mark" aria-hidden="true">🍀</span>럭키랩</a>
+        <p>확률과 AI를 재미있게 체험하는 무료 도구와, 그 원리를 쉽게 풀어 쓴 가이드를 만듭니다. 모든 도구는 회원가입 없이 브라우저에서 바로 동작합니다.</p>
+      </div>
+      <div>
+        <h2>도구와 가이드</h2>
+        <ul>
+          <li><a href="/lotto.html">로또 번호 추첨기</a></li>
+          <li><a href="/animal-test.html">AI 동물상 테스트</a></li>
+          <li><a href="/guides.html">가이드 전체 보기</a></li>
+          <li><a href="/guide-lotto-probability.html">로또 당첨 확률 정리</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>사이트 정보</h2>
+        <ul>
+          <li><a href="/about.html">럭키랩 소개</a></li>
+          <li><a href="/privacy.html">개인정보처리방침</a></li>
+          <li><a href="/terms.html">이용약관</a></li>
+          <li><a href="/contact.html">문의하기</a></li>
+        </ul>
+      </div>
+      <p class="footer-bottom">© 2026 럭키랩. 로또 번호 추첨기와 동물상 테스트는 재미를 위한 도구이며 당첨이나 결과를 보장하지 않습니다.</p>
+    </div>
+  </footer>
+  <script src="/assets/site.js" defer></script>
+</body>
+</html>

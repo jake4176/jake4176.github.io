@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>가이드 - 로또 확률, 난수, AI 이미지 분류를 쉽게 | 럭키랩</title>
+  <meta name="description" content="로또 6/45 당첨 확률 계산, 번호 선택에 대한 오해, 컴퓨터 난수의 원리, AI 이미지 분류와 동물상 테스트 활용법까지 럭키랩 가이드 모음입니다." />
+  <link rel="canonical" href="https://jake4176.github.io/guides.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="럭키랩" />
+  <meta property="og:title" content="가이드 - 로또 확률, 난수, AI 이미지 분류를 쉽게" />
+  <meta property="og:description" content="로또 6/45 당첨 확률 계산, 번호 선택에 대한 오해, 컴퓨터 난수의 원리, AI 이미지 분류와 동물상 테스트 활용법까지 럭키랩 가이드 모음입니다." />
+  <meta property="og:url" content="https://jake4176.github.io/guides.html" />
+  <meta property="og:locale" content="ko_KR" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%80%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+  <script>
+    (function () {
+      var theme = 'dark';
+      try {
+        theme = localStorage.getItem('lotto_theme') ||
+          (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      } catch (e) {}
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+  <link rel="stylesheet" href="/assets/site.css" />
+<!-- HEAD_EXTRA -->
+</head>
+<body class="site">
+  <a class="skip-link" href="#main">본문으로 바로가기</a>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="site-logo" href="/"><span class="site-logo-mark" aria-hidden="true">🍀</span>럭키랩</a>
+      <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-controls="siteNav" aria-expanded="false" aria-label="메뉴 열기"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+      <nav class="site-nav" id="siteNav" aria-label="주요 메뉴">
+        <ul>
+        <li><a href="/">홈</a></li>
+        <li><a href="/lotto.html">로또 번호 추첨기</a></li>
+        <li><a href="/animal-test.html">동물상 테스트</a></li>
+        <li><a href="/guides.html" aria-current="page">가이드</a></li>
+        <li><a href="/about.html">소개</a></li>
+        </ul>
+      </nav>
+      <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="라이트 모드로 전환" title="라이트 모드로 전환"><svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg><svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></button>
+    </div>
+  </header>
+  <main id="main">
+    <div class="page page-wide">
+      <nav class="breadcrumb" aria-label="현재 위치"><a href="/">홈</a><span aria-hidden="true">›</span>가이드</nav>
+      <h1 class="page-title">럭키랩 가이드</h1>
+      <p class="page-lead">럭키랩의 도구를 만들면서 직접 계산하고 확인한 내용을 누구나 이해할 수 있도록 정리했습니다. 로또와 확률 이야기, AI 이미지 분류와 동물상 이야기, 두 가지 주제로 나뉘어 있습니다.</p>
+
+      <h2 class="section-heading">🎰 로또와 확률<small>당첨 확률을 정확히 알고, 흔한 오해를 걸러 내고, 컴퓨터가 공정하게 번호를 뽑는 원리를 이해합니다.</small></h2>
+      <div class="card-grid">
+        <a class="link-card" href="/guide-lotto-probability.html">
+          <span class="card-kicker">읽는 시간 7분</span>
+          <h3>로또 6/45 당첨 확률, 숫자로 정확하게 이해하기</h3>
+          <p>C(45, 6) = 8,145,060이 나오는 과정, 1~5등의 조합 수와 확률, 여러 게임을 살 때의 변화, 기대값과 당첨금 세금을 표로 정리했습니다.</p>
+          <span class="card-more">읽어 보기 →</span>
+        </a>
+        <a class="link-card" href="/guide-lotto-myths.html">
+          <span class="card-kicker">읽는 시간 8분</span>
+          <h3>로또 번호에 대한 흔한 오해 7가지</h3>
+          <p>도박사의 오류, 연속 번호, 지난주 번호, 자동과 수동, 홀짝 비율, 번호 합계, 명당까지. 널리 퍼진 믿음을 확률로 검증합니다.</p>
+          <span class="card-more">읽어 보기 →</span>
+        </a>
+        <a class="link-card" href="/guide-random-numbers.html">
+          <span class="card-kicker">읽는 시간 8분</span>
+          <h3>컴퓨터는 어떻게 무작위 번호를 뽑을까?</h3>
+          <p>의사난수 생성기와 시드, 공정한 추첨의 조건, 피셔-예이츠 셔플과 자주 하는 실수, 그리고 럭키랩 추첨기의 실제 동작 방식을 설명합니다.</p>
+          <span class="card-more">읽어 보기 →</span>
+        </a>
+      </div>
+
+      <h2 class="section-heading">🐶 AI와 동물상<small>사진을 보고 판단하는 AI의 원리와 한계를 알고, 동물상 테스트를 더 재미있게 즐겨 보세요.</small></h2>
+      <div class="card-grid">
+        <a class="link-card" href="/guide-ai-image-classification.html">
+          <span class="card-kicker">읽는 시간 9분</span>
+          <h3>AI는 사진 속 강아지와 고양이를 어떻게 구분할까?</h3>
+          <p>사진이 숫자로 바뀌는 과정, 합성곱 신경망과 전이학습, 브라우저에서 동작하는 AI, 그리고 사람 얼굴을 분석할 때의 한계까지 다룹니다.</p>
+          <span class="card-more">읽어 보기 →</span>
+        </a>
+        <a class="link-card" href="/guide-dog-cat-face.html">
+          <span class="card-kicker">읽는 시간 7분</span>
+          <h3>강아지상 vs 고양이상, 얼굴 인상의 특징 정리</h3>
+          <p>눈매, 얼굴선, 표정으로 두 인상을 비교하고, 여우상·토끼상·곰상 등 다른 동물상과 인상 연출법까지 정리했습니다.</p>
+          <span class="card-more">읽어 보기 →</span>
+        </a>
+        <a class="link-card" href="/guide-photo-tips.html">
+          <span class="card-kicker">읽는 시간 6분</span>
+          <h3>동물상 테스트 정확도를 높이는 사진 촬영 팁</h3>
+          <p>AI가 사진 가운데를 잘라 224픽셀로 줄이는 방식에 맞춰, 얼굴 위치와 조명, 각도, 웹캠 사용법을 알려 드립니다.</p>
+          <span class="card-more">읽어 보기 →</span>
+        </a>
+      </div>
+
+      <div class="content-card prose" style="margin-top: 2.5rem;">
+        <h2>가이드는 이렇게 만듭니다</h2>
+        <p>럭키랩의 모든 가이드는 도구를 만들고 시험하는 과정에서 나온 내용을 바탕으로 씁니다. 확률은 직접 계산한 뒤 다른 방법으로 한 번 더 검산하고, AI 모델의 동작은 실제 사진으로 시험해 확인합니다. 세율처럼 바뀔 수 있는 정보는 작성 시점을 밝히고, 공식 안내를 확인하도록 안내합니다.</p>
+        <p>내용에서 틀린 부분을 발견하셨다면 <a href="/contact.html">문의하기</a>로 알려 주세요. 확인 후 바로 고치고, 수정한 날짜를 글에 반영하겠습니다.</p>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-about">
+        <a class="site-logo" href="/"><span class="site-logo-mark" aria-hidden="true">🍀</span>럭키랩</a>
+        <p>확률과 AI를 재미있게 체험하는 무료 도구와, 그 원리를 쉽게 풀어 쓴 가이드를 만듭니다. 모든 도구는 회원가입 없이 브라우저에서 바로 동작합니다.</p>
+      </div>
+      <div>
+        <h2>도구와 가이드</h2>
+        <ul>
+          <li><a href="/lotto.html">로또 번호 추첨기</a></li>
+          <li><a href="/animal-test.html">AI 동물상 테스트</a></li>
+          <li><a href="/guides.html">가이드 전체 보기</a></li>
+          <li><a href="/guide-lotto-probability.html">로또 당첨 확률 정리</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>사이트 정보</h2>
+        <ul>
+          <li><a href="/about.html">럭키랩 소개</a></li>
+          <li><a href="/privacy.html">개인정보처리방침</a></li>
+          <li><a href="/terms.html">이용약관</a></li>
+          <li><a href="/contact.html">문의하기</a></li>
+        </ul>
+      </div>
+      <p class="footer-bottom">© 2026 럭키랩. 로또 번호 추첨기와 동물상 테스트는 재미를 위한 도구이며 당첨이나 결과를 보장하지 않습니다.</p>
+    </div>
+  </footer>
+  <script src="/assets/site.js" defer></script>
+</body>
+</html>
